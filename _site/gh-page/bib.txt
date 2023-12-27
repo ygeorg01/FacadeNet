@@ -1,0 +1,6 @@
+@article{FacadeNet2024,
+  author  = {Yiangos Georgiou and Marios Loizou and Tom Kelly and Melinos Averkiou},
+  title   = {{FacadeNet: Conditional Facade Synthesis via Selective Editing}},
+  booktitle    = {{IEEE/CVF} Winter Conference on Applications of Computer Vision}
+  year         = {2024},
+}

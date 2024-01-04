@@ -6,17 +6,7 @@ class Launcher(TmuxLauncher):
         opt = Options()
         opt.set(
 
-            #dataroot="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/facades/",
-            #dataroot_sem="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/semantics/",
-            #dataroot_feats="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vit_feats_4/",
-            #dataroot_depth="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/depth/",
-            #dataroot_h="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/horizontal_maps/",
-            #dataroot_v="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vertical_maps/",
-            #train_split_dir="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/train_split.txt",
-            #eval_split_dir ="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/eval_split.txt",
-
             dataroot="/lustreFS/data/vcg/yiangos/interactive_textures_sem/facades/",
-            #dataroot_sem="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vit_pc/",
             dataroot_feats="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vit_feats_4/",
             dataroot_depth="/lustreFS/data/vcg/yiangos/interactive_textures_sem/depth/",
             dataroot_h="/lustreFS/data/vcg/yiangos/interactive_textures_sem/horizontal_maps/",
@@ -65,15 +55,7 @@ class Launcher(TmuxLauncher):
             phase='test',
             num_gpus=1,
             batch_size=1,
-            #dataroot="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/facades/",
-            #dataroot_sem="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vit_pc/",
-            #dataroot_depth="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/depth/",
-            #dataroot_h="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/horizontal_maps/",
-            #dataroot_v="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vertical_maps/",
-            #train_split_dir="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/train_split.txt",
-            #eval_split_dir ="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/eval_split.txt",
             dataroot="/lustreFS/data/vcg/yiangos/interactive_textures_sem/facades/",
-            #dataroot_sem="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vit_pc/",
             dataroot_feats="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vit_feats_4/",
             dataroot_depth="/lustreFS/data/vcg/yiangos/interactive_textures_sem/depth/",
             dataroot_h="/lustreFS/data/vcg/yiangos/interactive_textures_sem/horizontal_maps/",

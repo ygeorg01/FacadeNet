@@ -107,12 +107,6 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
             # sp = sp.repeat(2, 1, 1, 1)
             for j, (h, v) in enumerate(zip(hs, vs)):
 
-                # Change vertical va map
-                # va_0 = va[:, 0, :, :].unsqueeze(1)
-
-                # va_1 = va_maps[i][:, 1, :, :].unsqueeze(1)
-                # va = torch.cat((va_0, va_1), dim=1)
-
                 fake_img = model(sp, h, v, command="decode")
 
                 fake_img = util.tensor2im(fake_img, tile=False)
@@ -206,8 +200,6 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                     img_new = imgs[ii].unsqueeze(0)
                     # Horizontal interpolation for evaluation
                     for mean in [-0.4, 0., 0.4]:
-                    # for mean in [-0.3,  -0.15, 0., 0.15, 0.3]:
-                    # for mean in [-0.3, -0.275, -0.25, -0.225, -0.2, -0.175, -0.15, -0.125, -0.1, -0.075, -0.05,
 
                         h_new = self.new_mask(h[ii].unsqueeze(0), mean=mean)
                         h_new = h_new.repeat(self.opt.num_gpus, 1)
@@ -240,9 +232,6 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                     save_image(mask[ii].unsqueeze(0), os.path.join(mask_rec_dir, str(count_saved_images).zfill(5)+'.png'))
                     count_saved_images+=1
 
-
-                # im = ((np.clip(np.transpose(fake_img.cpu().detach().numpy().squeeze(), (1, 2, 0)), -1,
-                #                1) + 1) * 127.5).astype(np.uint8)
 
                 if img_count >= len(dataset):
                     break
@@ -297,17 +286,9 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                 print("Exhausted the dataset at %s" % (self.opt.dataroot))
                 exhausted = True
                 break
-            # print(images)
 
-            # print('Images in eval: ', images)
             if images is None:
                 break
-            # mix_grid, grid_v, grid_h = self.generate_samples(model, images, hs, vs)
-            # webpage.add_images([mix_grid], ["%04d.png" % i])
-            # webpage.add_images([grid_v], ["%04d_vertical.png" % i])
-            # webpage.add_images([grid_h], ["%04d_horizontal.png" % i])
-            # if should_break:
-            #     break
 
         for iter_ in range(3):
             # print('Iter: ', iter_)
@@ -324,8 +305,6 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                 break
 
             for i, (image, h, v) in enumerate(zip(images, hs, vs)):
-                # if i>0:
-                #     break
                 sp = model(image.repeat(self.opt.num_gpus, 1, 1, 1), command="encode")
 
                 # Horizontal Interpolation
@@ -334,113 +313,28 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 h_steps = 10
                 v_steps = 1
-                # h = va[:,0,:,:].unsqueeze(1)
-                # h = ((h-torch.min(h))/ (torch.max(h)-torch.min(h)) * 2) - 1
-                # h * 0.2
-                # v_norm = ((v-torch.min(v))/ (torch.max(v)-torch.min(v)) * 2) -1
-
-                #h = ((h - (-1.0)) / (0.73 - (-1.0)) * 2) - 1.27
-                #v = ((v - (-1.0)) / (0.1 - (-1.0)) * 2) - 1
-
-                # print('h diff: ', torch.max(h) - torch.min(h))
-                # print('v diff: ', torch.max(v) - torch.min(v))
-
-                # print((torch.max(h) - torch.min(h)))
-                # h = h_norm * ((torch.max(h) - torch.min(h))/2)
-                # v = v_norm * ((torch.max(v) - torch.min(v))/2)
-                # print('v norm: ', torch.min(v), torch.max(v))
-
-                # h *= 2
-
-                #print('h min and max before: ', torch.min(h), torch.max(h))
 
                 dif_min = torch.min(h) - (-interpolation_range_h)
                 h = h - dif_min
 
-                #print('h min and max: ', torch.min(h), torch.max(h))
-
-
-
-                #v *= 0.6
-                #dif_min = (torch.min(v) - -interpolation_range_v)
-                #v = v - dif_min
-
-                # h = h - 0.1
-                # v = v - 0.1
-
                 add_value_h = abs(((torch.max(h) - interpolation_range_h) / h_steps))
-                #add_value_v = abs(((torch.max(v) - interpolation_range_v) / v_steps))
 
-                # initial masks
-                # h = h - torch.min(h)
-                # h = ((h - torch.min(h)) / (torch.max(h) - torch.min(h)) * 2) - 1
-
-                # print('Starting h: ', h)
-                # va_1 = va[:,1,:,:].unsqueeze(1)
-                # diff = torch.min(h) + interpolation_range
-                # diff = h + interpolation_range
-                # diff = va_1 + interpolation_range
-
-
-                # h = h - diff
-
-                h_start = h.clone()
-                # print('After subtraction horizontal: ', diff, torch.min(va_1), torch.max(va_1))
-                # add_value_h = abs(((torch.max(h) - interpolation_range)/h_steps))
-                # add_value_h = abs(((torch.min(h) - interpolation_range)/h_steps))
-
-                # add_value_h = abs(((h - interpolation_range_h)/h_steps))
-
-                # print('Add value')
                 inter_images = []
                 horizontal_images = []
                 vertical_images = []
-                interpolation_average = []
-                center_image = None
-
-                # h += (add_value_h * 50)
-
-                # h = (h - torch.min(h)) / (torch.max(h) - torch.min(h))
-
-
-
-                # fake_img = model(sp, h, v, command="decode")
-                #
-                # im = ((np.clip(np.transpose(fake_img.cpu().detach().numpy().squeeze(), (1, 2, 0)), -1,
-                #                1) + 1) * 127.5).astype(np.uint8)
-                #
-                # center_image = im
-                #
-
 
                 h_start = h.clone()
 
                 for interpolation_index in range(v_steps+1):
                    h = h_start.clone()
-                   # v = torch.clip(v, min=-1, max=0)
                    for interpolation_index in range(h_steps+1):
 
-                       # h = h.repeat(self.opt.num_gpus, 1, 1, 1)
-                       # h = torch.clamp(h, min=-1, max=1)
-                       # v = v.repeat(self.opt.num_gpus, 1, 1, 1)
-                       # v = torch.clamp(v, min=-1, max=1)
-
-                       # print('H shape: ', h)
-                       # print('V shape: ', v)
-                       # print('sp shape: ', sp)
-
-                       # h = torch.clip(h-0.1, min=-0.55, max=0.55)
                        h_vec = h[:, :, 0, :].squeeze().unsqueeze(0)
                        v_vec = v[:, :, :, 0].squeeze().unsqueeze(0)
-
-                       # v_vec = v_vec.repeat(self.opt.num_gpus, 1)
-                       # h_vec = h_vec.repeat(self.opt.num_gpus, 1)
-                       # sp = sp.repeat(self.opt.num_gpus, 1, 1, 1)
 
                        print('h vec: ', torch.min(h_vec), torch.max(h_vec))
                        v_vec = v_vec.repeat(self.opt.num_gpus, 1)
                        h_vec = h_vec.repeat(self.opt.num_gpus, 1)
-                       # sp = sp.repeat(self.opt.num_gpus, 1, 1, 1)
 
                        fake_img = model(sp, h_vec, v_vec, command="decode")
 
@@ -452,58 +346,16 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                        horizontal_images.append(h_s)
                        vertical_images.append(v_s)
 
-
-
                        h += add_value_h
                    v += 0.02
 
-                       # if interpolation_index == 30:
-                       #     center_image=im
-
-
-
-                # print('Average: ', sum(interpolation_average)/len(interpolation_average))
                 imageio.mimsave(os.path.join(savedir, str(iter_).zfill(5)+'_h.gif'), inter_images)
-                # imageio.imsave(os.path.join(savedir, str(iter_), str(i), 'center.png'), center_image)
-                # imageio.imsave(os.path.join(savedir, 'center', str(iter_).zfill(5)+'.png'), center_image)
 
                 for i, (im, h, v) in enumerate(zip(inter_images, horizontal_images, vertical_images)):
                     imageio.imsave(os.path.join(savedir, str(iter_), str(i).zfill(5) + '_img.png'), im)
-                    # imageio.imsave(os.path.join(savedir, str(iter_), str(i).zfill(5)+'_h.png'), h)
-                    # imageio.imsave(os.path.join(savedir, str(iter_), str(i).zfill(5) + '_v.png'), v)
 
                 break
-                # Vertical Interpolation
-                # interpolation_range = 1.0
-                # v_steps = 40
-                # va_0 = va[:,0,:,:].unsqueeze(1)
-                # # va_1 = va[:,1,:,:].unsqueeze(1)
-                # diff = torch.min(va_0) - (-interpolation_range)
-                # va_0 = va_0 - diff
-                # va_v_start = va_0.clone()
-                # # print('After subtraction vertical: ', diff, torch.min(va_0), torch.max(va_0))
-                # add_value_v = ((interpolation_range - va_0)/v_steps)
-                #
-                # inter_images = []
-                # va_1_center = va_1_center.repeat(self.opt.num_gpus, 1, 1, 1)
-                #
-                # for interpolation_index in range(v_steps):
-                #
-                #     # va = torch.cat((va_0, va_1), dim=1)
-                #     va = torch.cat((va_0, va_1_center), dim=1)
-                #
-                #     fake_img = model(sp, va, command="decode")
-                #     # print(fake_img.cpu().detach().numpy().squeeze()[[1,2,0]].shape)
-                #     inter_images.append(np.transpose(fake_img.cpu().detach().numpy().squeeze(), (1,2,0)))
-                #     # fake_img = util.tensor2im(fake_img, tile=False)
-                #     # save_image((fake_img+1)/2, os.path.join(self.output_dir(), 'inter_v_'+str(interpolation_index)+'.png'))
-                #
-                #     if interpolation_index == v_steps/2:
-                #         va_0_center = va_0.clone()
-                #
-                #     va_0 += add_value_v
-                #
-                # imageio.mimsave(os.path.join(savedir, str(i), 'v.gif'), inter_images)
+
 
         webpage.save()
         return {}

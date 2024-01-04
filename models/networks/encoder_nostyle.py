@@ -45,16 +45,11 @@ class StyleGAN2ResnetEncoderNostyle(BaseNetwork):
         # If antialiasing is used, create a very lightweight Gaussian kernel.
         blur_kernel = [1, 2, 1] if self.opt.use_antialias else [1]
 
-        # self.add_module("FromRGB", ConvLayer(3, self.nc(0), 1, reflection_pad=True))
         self.add_module("FromRGB", ConvLayer(3, self.nc(0), 1, reflection_pad=True))
 
         self.DownToSpatialCode = nn.Sequential()
         for i in range(self.opt.netE_num_downsampling_sp):
-            # self.DownToSpatialCode.add_module(
-            #     "ResBlockDownBy%d" % (2 ** i),
-            #     ResBlock(self.nc(i), self.nc(i + 1), blur_kernel,
-            #              reflection_pad=True)
-            # )
+
             self.DownToSpatialCode.add_module(
                 "ResBlockDownBy%d" % (2 ** i),
                 ResBlock(self.nc(i), self.nc(i + 1), blur_kernel, reflection_pad=True)
@@ -65,11 +60,7 @@ class StyleGAN2ResnetEncoderNostyle(BaseNetwork):
         nchannels = self.nc(self.opt.netE_num_downsampling_sp)
         self.add_module(
             "ToSpatialCode",
-            # nn.Sequential(
-            #     ConvLayer(nchannels, nchannels, 1, activate=True, bias=True, reflection_pad=True),
-            #     ConvLayer(nchannels, self.opt.spatial_code_ch, kernel_size=1,
-            #               activate=False, bias=True, reflection_pad=True)
-            # )
+
             nn.Sequential(
                 ConvLayer(nchannels, nchannels, 1, activate=True, bias=True, reflection_pad=True),
                 ConvLayer(nchannels, self.opt.spatial_code_ch, kernel_size=1,
@@ -77,24 +68,7 @@ class StyleGAN2ResnetEncoderNostyle(BaseNetwork):
             )
         )
 
-        # self.DownToGlobalCode = nn.Sequential()
-        # for i in range(self.opt.netE_num_downsampling_gl):
-        #     idx_from_beginning = self.opt.netE_num_downsampling_sp + i
-        #     self.DownToGlobalCode.add_module(
-        #         "ConvLayerDownBy%d" % (2 ** idx_from_beginning),
-        #         ConvLayer(self.nc(idx_from_beginning),
-        #                   self.nc(idx_from_beginning + 1), kernel_size=3,
-        #                   blur_kernel=[1], downsample=True, pad=0)
-        #     )
-        #
-        # nchannels = self.nc(self.opt.netE_num_downsampling_sp +
-        #                     self.opt.netE_num_downsampling_gl)
-        # self.add_module(
-        #     "ToGlobalCode",
-        #     nn.Sequential(
-        #         EqualLinear(nchannels, self.opt.global_code_ch)
-        #     )
-        # )
+
 
     def nc(self, idx):
         nc = self.opt.netE_nc_steepness ** (5 + idx)
@@ -107,22 +81,6 @@ class StyleGAN2ResnetEncoderNostyle(BaseNetwork):
         midpoint = self.DownToSpatialCode(x)
         sp = self.ToSpatialCode(midpoint)
 
-        # if extract_features:
-        #     padded_midpoint = F.pad(midpoint, (1, 0, 1, 0), mode='reflect')
-        #     feature = self.DownToGlobalCode[0](padded_midpoint)
-        #     assert feature.size(2) == sp.size(2) // 2 and \
-        #         feature.size(3) == sp.size(3) // 2
-        #     feature = F.interpolate(
-        #         feature, size=(7, 7), mode='bilinear', align_corners=False)
-        #
-        # x = self.DownToGlobalCode(midpoint)
-        # x = x.mean(dim=(2, 3))
-        # gl = self.ToGlobalCode(x)
         sp = util.normalize(sp)
-        # gl = util.normalize(gl)
-        # if extract_features:
-        #     return sp, gl, feature
-        # else:
-        #     return sp, gl
 
         return sp

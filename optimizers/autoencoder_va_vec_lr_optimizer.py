@@ -104,7 +104,8 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
         self.optimizer_G.step()
 
         # Optimize signal for blending layer
-        mask_loss = m_losses['G_sel_L1'].mean() + 10 * (torch.abs(torch.sum(self.blend_weights.squeeze(), dim=0) - 1))
+        mask_loss = m_losses['G_sel_L1'].mean() + 10 * (torch.abs(torch.sum(F.relu(self.blend_weights.squeeze()), dim=0)
+                                                                  - 1))
 
         mask_loss.backward()
         self.optimizer_mask.step()

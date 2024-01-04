@@ -48,7 +48,7 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
         self.blend_weights = torch.full((1, 4, 1, 1), 0.25, device='cuda', requires_grad=True)
         self.sigmoid = torch.nn.Sigmoid()
         self.optimizer_mask = torch.optim.Adam(
-            [self.blend_weights], lr=0.05
+            [self.blend_weights], lr=0.01
         )
         self.mse_loss = torch.nn.MSELoss(reduction='mean')
     def set_requires_grad(self, params, requires_grad):
@@ -90,9 +90,9 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
         self.optimizer_G.zero_grad()
         self.optimizer_mask.zero_grad()
 
-        print('Compute editing mask: ', self.blend_weights, feats.shape)
+        # print('Compute editing mask: ', self.blend_weights, feats.shape)
         mask = self.sigmoid(torch.sum(self.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
-        # mask = F.normalize(mask)
+        #mask = F.normalize(mask)
         self.model.blend_weights = self.blend_weights
 
         g_losses, g_metrics, m_losses, m_metrics = self.model(
@@ -158,7 +158,7 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
 
         with torch.no_grad():
             mask = self.sigmoid(torch.sum(self.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
-            # mask = F.normalize(mask)
+            #mask = F.normalize(mask)
             return self.model(images, h[:,:,0,:].squeeze(), v[:,:,:,0].squeeze(), depth, mask, command="get_visuals_for_snapshot")
 
     def save(self, total_steps_so_far):

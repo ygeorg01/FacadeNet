@@ -7,7 +7,7 @@ import os
 import torch
 import torchvision.transforms as T
 import numpy as np
-from torchvision.utils import draw_segmentation_masks
+#from torchvision.utils import draw_segmentation_masks
 
 class ImageFolderVaDepthLrDataset(BaseDataset):
     def __init__(self, opt):
@@ -83,7 +83,7 @@ class ImageFolderVaDepthLrDataset(BaseDataset):
         imgs = imgs_dict['real_A']
         h = imgs_dict['h']
         v = imgs_dict['v']
-        sem = imgs_dict['sem']
+        #sem = imgs_dict['sem']
         depth = imgs_dict['depth']
         feats = imgs_dict['feats']
 
@@ -95,9 +95,9 @@ class ImageFolderVaDepthLrDataset(BaseDataset):
 
         imgs = A_transform(imgs)
 
-        sem = B_transform(sem)
+        #sem = B_transform(sem)
 
-        sem = abs((((sem + 1)/2) - 1))
+        #sem = abs((((sem + 1)/2) - 1))
 
         h = B_transform(h)
         v = B_transform(v)
@@ -125,7 +125,7 @@ class ImageFolderVaDepthLrDataset(BaseDataset):
 
         kernel = torch.ones((1,1,5,5))
 
-        imgs_dict['sem'] = sem
+        #imgs_dict['sem'] = sem
         imgs_dict['depth'] = depth
         imgs_dict['feats'] = feats
 
@@ -144,8 +144,8 @@ class ImageFolderVaDepthLrDataset(BaseDataset):
         vertical_img = Image.open(path_v)
         vertical_img = vertical_img.resize((load_size, load_size), resample=Image.BICUBIC)
 
-        semantic_img = Image.open(path_sem)
-        semantic_img = semantic_img.resize((load_size, load_size), resample=Image.BICUBIC)
+        #semantic_img = Image.open(path_sem)
+        #semantic_img = semantic_img.resize((load_size, load_size), resample=Image.BICUBIC)
 
         depth_img = Image.open(path_depth)
         depth_img = depth_img.resize((load_size, load_size), resample=Image.BICUBIC)
@@ -153,7 +153,7 @@ class ImageFolderVaDepthLrDataset(BaseDataset):
         feats = torch.load(path_feats)
 
         return {'real_A':A_img, 'path_A':A_path, 'h':horizontal_img, 'h_path':path_h, 'v':vertical_img, 'v_path':path_v
-                ,'sem':semantic_img, 'sem_path':path_sem, 'depth':depth_img, 'path_depth':path_depth, 'feats':feats, 'feats_path':path_feats}
+                ,'depth': depth_img, 'path_depth': path_depth , 'feats':feats, 'feats_path':path_feats}
 
     def __len__(self):
         return self.A_size

@@ -186,11 +186,10 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 # Prepare v & h vectors
                 v = data['v']
-
                 v = v[:, :, :, 0].squeeze()
                 v_vec = v.clone()
+                
                 h = data['h']
-
                 h = h[:, :, 0, :].squeeze()
                 h_vec = h.clone()
 
@@ -206,17 +205,16 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                     img_new = imgs[ii].unsqueeze(0)
                     # Horizontal interpolation for evaluation
-                    for mean in [-0.3,  -0.15, 0., 0.15, 0.3]:
+                    for mean in [-0.4, 0., 0.4]:
+                    # for mean in [-0.3,  -0.15, 0., 0.15, 0.3]:
                     # for mean in [-0.3, -0.275, -0.25, -0.225, -0.2, -0.175, -0.15, -0.125, -0.1, -0.075, -0.05,
 
-                        h_new = self.new_mask(h.unsqueeze(0)[0], mean=mean)
+                        h_new = self.new_mask(h[ii].unsqueeze(0), mean=mean)
                         h_new = h_new.repeat(self.opt.num_gpus, 1)
-
-                        v_new = v_vec.unsqueeze(0)[0]
-                        # v_new = ((v_new - (-1.0)) / (0.1 - (-1.0)) * 2) - 1
+                        v_new = v_vec[ii].unsqueeze(0)
                         v_new = v_new.repeat(self.opt.num_gpus, 1)
 
-                        sp_new = sp.unsqueeze(0)[0]
+                        sp_new = sp[ii].unsqueeze(0)
                         sp_new = sp_new.repeat(self.opt.num_gpus, 1, 1, 1)
 
 
@@ -311,7 +309,7 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
             # if should_break:
             #     break
 
-        for iter_ in range(0):
+        for iter_ in range(3):
             # print('Iter: ', iter_)
             images, hs, vs, should_break = self.gather_images(dataset)
 
@@ -331,18 +329,18 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                 sp = model(image.repeat(self.opt.num_gpus, 1, 1, 1), command="encode")
 
                 # Horizontal Interpolation
-                interpolation_range_h = 0.70
-                interpolation_range_v = 0.6
+                interpolation_range_h = 0.60
+                interpolation_range_v = 0.4
 
-                h_steps = 30
-                v_steps = 6
+                h_steps = 10
+                v_steps = 1
                 # h = va[:,0,:,:].unsqueeze(1)
                 # h = ((h-torch.min(h))/ (torch.max(h)-torch.min(h)) * 2) - 1
                 # h * 0.2
                 # v_norm = ((v-torch.min(v))/ (torch.max(v)-torch.min(v)) * 2) -1
 
-                h = ((h - (-1.0)) / (0.73 - (-1.0)) * 2) - 1.27
-                v = ((v - (-1.0)) / (0.1 - (-1.0)) * 2) - 1
+                #h = ((h - (-1.0)) / (0.73 - (-1.0)) * 2) - 1.27
+                #v = ((v - (-1.0)) / (0.1 - (-1.0)) * 2) - 1
 
                 # print('h diff: ', torch.max(h) - torch.min(h))
                 # print('v diff: ', torch.max(v) - torch.min(v))
@@ -354,24 +352,24 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 # h *= 2
 
-                print('h min and max before: ', torch.min(h), torch.max(h))
+                #print('h min and max before: ', torch.min(h), torch.max(h))
 
                 dif_min = torch.min(h) - (-interpolation_range_h)
                 h = h - dif_min
 
-                print('h min and max: ', torch.min(h), torch.max(h))
+                #print('h min and max: ', torch.min(h), torch.max(h))
 
 
 
-                v *= 0.6
-                dif_min = (torch.min(v) - -interpolation_range_v)
-                v = v - dif_min
+                #v *= 0.6
+                #dif_min = (torch.min(v) - -interpolation_range_v)
+                #v = v - dif_min
 
                 # h = h - 0.1
                 # v = v - 0.1
 
                 add_value_h = abs(((torch.max(h) - interpolation_range_h) / h_steps))
-                add_value_v = abs(((torch.max(v) - interpolation_range_v) / v_steps))
+                #add_value_v = abs(((torch.max(v) - interpolation_range_v) / v_steps))
 
                 # initial masks
                 # h = h - torch.min(h)
@@ -417,10 +415,10 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 h_start = h.clone()
 
-                for interpolation_index in range(v_steps):
+                for interpolation_index in range(v_steps+1):
                    h = h_start.clone()
                    # v = torch.clip(v, min=-1, max=0)
-                   for interpolation_index in range(h_steps):
+                   for interpolation_index in range(h_steps+1):
 
                        # h = h.repeat(self.opt.num_gpus, 1, 1, 1)
                        # h = torch.clamp(h, min=-1, max=1)
@@ -457,7 +455,7 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
 
                        h += add_value_h
-                   v += add_value_v
+                   v += 0.02
 
                        # if interpolation_index == 30:
                        #     center_image=im

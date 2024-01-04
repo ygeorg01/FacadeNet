@@ -44,9 +44,9 @@ def make_dataset(dir, dir_h, dir_v, dir_sem, dir_depth, dir_feats, fnames_list, 
                 path_feats = os.path.join(dir_feats, fname.split('.')[0]+'.pt')
 
                 images.append([path_img, path_h, path_v, path_sem, path_depth, path_feats])
-
-                if len(images) >= 400:
-                   break
+                #print('paths : ', path_sem, path_depth)
+                #if len(images) >= 300:
+                #    break
 
     # print('images: ', len(images))
     return images[:min(max_dataset_size, len(images))]

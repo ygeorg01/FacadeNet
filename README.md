@@ -17,6 +17,6 @@ Root
 #### Click on the link to download the data: [Link](https://github.com/ZPdesu/lsaa-dataset)
 
 ## Training
-#### Change the file paths paths in config file experiments/facades_vec_pc_lr_launcher.py
+#### Change data file paths in config file (experiments/facades_vec_pc_lr_launcher.py)
 #### Run 
 ```python -m experiments facades_vec_pc_lr train facadenet```

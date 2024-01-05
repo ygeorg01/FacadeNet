@@ -45,8 +45,8 @@ def make_dataset(dir, dir_h, dir_v, dir_sem, dir_depth, dir_feats, fnames_list, 
 
                 images.append([path_img, path_h, path_v, path_sem, path_depth, path_feats])
                 #print('paths : ', path_sem, path_depth)
-                #if len(images) >= 300:
-                #    break
+                # if len(images) >= 3000:
+                #     break
 
     # print('images: ', len(images))
     return images[:min(max_dataset_size, len(images))]

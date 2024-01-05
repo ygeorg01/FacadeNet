@@ -199,7 +199,8 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                     img_new = imgs[ii].unsqueeze(0)
                     # Horizontal interpolation for evaluation
-                    for mean in [-0.4, 0., 0.4]:
+                    # for mean in [-0.4, 0., 0.4]:
+                    for mean in [-0.4, -0.2, 0., 0.2, 0.4]:
 
                         h_new = self.new_mask(h[ii].unsqueeze(0), mean=mean)
                         h_new = h_new.repeat(self.opt.num_gpus, 1)

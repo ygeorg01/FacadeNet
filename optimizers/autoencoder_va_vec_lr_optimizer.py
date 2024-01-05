@@ -91,7 +91,7 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
         self.optimizer_mask.zero_grad()
 
         # print('Compute editing mask: ', self.blend_weights, feats.shape)
-        mask = self.sigmoid(torch.sum(self.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
+        mask = torch.sum(self.sigmoid(self.blend_weights) * feats.to('cuda'), dim=1, keepdim=True)
         #mask = F.normalize(mask)
         self.model.blend_weights = self.blend_weights
 
@@ -158,7 +158,7 @@ class AutoencoderVaVecLrOptimizer(BaseOptimizer):
         images, h, v, depth, feats = self.prepare_images(data_i)
 
         with torch.no_grad():
-            mask = self.sigmoid(torch.sum(self.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
+            mask = torch.sum(self.sigmoid(self.blend_weights) * feats.to('cuda'), dim=1, keepdim=True)
             #mask = F.normalize(mask)
             return self.model(images, h[:,:,0,:].squeeze(), v[:,:,:,0].squeeze(), depth, mask, command="get_visuals_for_snapshot")
 

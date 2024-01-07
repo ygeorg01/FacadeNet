@@ -131,6 +131,28 @@ class AutoencoderVaVecLrModel(BaseModel):
         )
         return crops
 
+    def compute_R1_loss(self, real, h, v):
+        losses = {}
+        if self.opt.lambda_R1 > 0.0:
+            real.requires_grad_()
+            input_ = torch.cat((real, h, v), dim=1)
+            pred_real = self.D(input_)[0].sum()
+            grad_real, = torch.autograd.grad(
+                outputs=pred_real,
+                inputs=[input_],
+                create_graph=True,
+                retain_graph=True,
+            )
+            grad_real2 = grad_real.pow(2)
+            dims = list(range(1, grad_real2.ndim))
+            grad_penalty = grad_real2.sum(dims) * (self.opt.lambda_R1 * 0.5)
+        else:
+            grad_penalty = 0.0
+
+        losses["D_R1"] = grad_penalty
+
+        return losses
+
 
     def compute_discriminator_losses(self, real, h, v, depth):
 

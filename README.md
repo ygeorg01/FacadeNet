@@ -2,7 +2,7 @@
 
 ## FacadeNet's code is built based on the swapping-autoencoder [repo](https://github.com/taesungp/swapping-autoencoder-pytorch) code structure
 
-![img](teaser.pdf)
+![img](teaser.png)
 
 ## Conda Enviroment
 #### Create new conda enviroment

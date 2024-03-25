@@ -26,6 +26,6 @@ Root
 ## Testing
 #### Change data file paths in config file (experiments/facades_vec_pc_lr_launcher.py)
 #### Create folder named checkpoints/facadenet/
-#### Download facadenet pre-trained weights [Link](https://ucy-my.sharepoint.com/:u:/g/personal/ygeorg01_ucy_ac_cy/Ea2k-iAIC5VOjX0MByNAGFQB83nwrIqbM9ed1XEO_W_1vg?e=FuT9Ol)
+#### Download facadenet pre-trained weights [Link](https://ucy-my.sharepoint.com/:u:/g/personal/ygeorg01_ucy_ac_cy/Ea2k-iAIC5VOjX0MByNAGFQB83nwrIqbM9ed1XEO_W_1vg?e=FuT9Ol) in  checkpoints/facadenet/ folder
 #### Run
 ```python -m experiments facades_vec_pc_lr test facadenet```

@@ -4,8 +4,8 @@
 
 ![img](teaser.png)
 
-## Conda Enviroment
-#### Create new conda enviroment
+## Conda Environment
+#### Create new conda environment
 ```conda env create -f environment.yml```
 
 ## Datasets
@@ -22,3 +22,10 @@ Root
 #### Change data file paths in config file (experiments/facades_vec_pc_lr_launcher.py)
 #### Run 
 ```python -m experiments facades_vec_pc_lr train facadenet```
+
+## Testing
+#### Change data file paths in config file (experiments/facades_vec_pc_lr_launcher.py)
+#### Create folder named checkpoints/facadenet/
+#### Download facadenet pre-trained weights [Link](https://ucy-my.sharepoint.com/:u:/g/personal/ygeorg01_ucy_ac_cy/Ea2k-iAIC5VOjX0MByNAGFQB83nwrIqbM9ed1XEO_W_1vg?e=FuT9Ol)
+#### Run
+```python -m experiments facades_vec_pc_lr test facadenet```

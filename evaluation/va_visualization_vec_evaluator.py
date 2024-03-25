@@ -173,7 +173,10 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                 img_count += imgs.shape[0]
                 batch_count += 1
 
-                mask = self.sigmoid(torch.sum(model.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
+                if hasattr(model, 'blend_weights'):
+                    mask = self.sigmoid(torch.sum(model.blend_weights * feats.to('cuda'), dim=1, keepdim=True))
+                else:
+                    mask = None
                 # mask = F.normalize(mask)
 
                 sp = model(imgs, command="encode")
@@ -210,7 +213,6 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
                         sp_new = sp[ii].unsqueeze(0)
                         sp_new = sp_new.repeat(self.opt.num_gpus, 1, 1, 1)
 
-
                         new_imgs = model(sp_new, h_new, v_new, command="decode")
 
                         new_imgs = torch.clip(new_imgs, min=-1, max=1)
@@ -227,10 +229,10 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 for ii in range(gen_imgs.shape[0]):
                     # Store images
-
                     save_image(gen_imgs_norm[ii].unsqueeze(0), os.path.join(fid_rec_dir, str(count_saved_images).zfill(5)+'.png'))
                     save_image(imgs_norm[ii].unsqueeze(0), os.path.join(fid_src_dir, str(count_saved_images).zfill(5)+'.png'))
-                    save_image(mask[ii].unsqueeze(0), os.path.join(mask_rec_dir, str(count_saved_images).zfill(5)+'.png'))
+                    if mask is not None:
+                        save_image(mask[ii].unsqueeze(0), os.path.join(mask_rec_dir, str(count_saved_images).zfill(5)+'.png'))
                     count_saved_images+=1
 
 
@@ -291,7 +293,7 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
             if images is None:
                 break
 
-        for iter_ in range(3):
+        for iter_ in range(4):
             # print('Iter: ', iter_)
             images, hs, vs, should_break = self.gather_images(dataset)
 
@@ -326,14 +328,13 @@ class VaVisualizationVecEvaluator(BaseEvaluator):
 
                 h_start = h.clone()
 
-                for interpolation_index in range(v_steps+1):
+                for interpolation_index in range(v_steps):
                    h = h_start.clone()
                    for interpolation_index in range(h_steps+1):
 
                        h_vec = h[:, :, 0, :].squeeze().unsqueeze(0)
                        v_vec = v[:, :, :, 0].squeeze().unsqueeze(0)
 
-                       print('h vec: ', torch.min(h_vec), torch.max(h_vec))
                        v_vec = v_vec.repeat(self.opt.num_gpus, 1)
                        h_vec = h_vec.repeat(self.opt.num_gpus, 1)
 

@@ -33,7 +33,7 @@ class Launcher(TmuxLauncher):
             display_freq=20000, print_freq=1000,
             model='autoencoder_va_vec_lr', optimizer='autoencoder_va_vec_lr',
             lambda_L1=3,
-            checkpoints_dir="./facadenet_results/",
+            checkpoints_dir="./checkpoints/",
             lambda_sel_L1=3
             # parser.add_argument('--model', type=str, default='swapping_autoencoder', help='which model to use')
             # parser.add_argument('--optimizer', type=str, default='swapping_autoencoder', help='which model to use')
@@ -59,21 +59,24 @@ class Launcher(TmuxLauncher):
 
     def test_options(self):
         common_options = self.options()
-
+        root = "/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/"
         return [opt.tag("fig4").specify(
+            load_size=256,
+            crop_size=256,
             phase='test',
             num_gpus=1,
-            batch_size=1,
-            dataroot="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/facades/",
-            dataroot_sem="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/semantics/",
-            dataroot_feats="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vit_feats_4/",
-            dataroot_depth="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/depth/",
-            dataroot_h="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/horizontal_maps/",
-            dataroot_v="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vertical_maps/",
-            train_split_dir="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/train_split.txt",
-            eval_split_dir ="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/eval_split.txt",
-            dataset_mode="imagefolder_va",
+            batch_size=4,
+            dataroot=root+"facades/",
+            dataroot_sem= root+"semantics/",
+            dataroot_feats= root+"vit_feats_4/",
+            dataroot_depth= root+"depth/",
+            dataroot_h= root+"horizontal_maps/",
+            dataroot_v= root+"vertical_maps/",
+            train_split_dir= root+"train_split.txt",
+            eval_split_dir = root+"eval_split.txt",
+            dataset_mode="imagefolder_va_depth_lr",
             preprocess="resize",
             evaluation_metrics="va_visualization_vec",
+            generator_name="facadenet.pth"
         ) for opt in common_options]
 

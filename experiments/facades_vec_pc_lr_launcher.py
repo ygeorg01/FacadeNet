@@ -4,24 +4,16 @@ from .tmux_launcher import Options, TmuxLauncher
 class Launcher(TmuxLauncher):
     def options(self):
         opt = Options()
+        root = "/media/yiangos/Urban_Enviroment_Understanding_Project/facade_net_data"
         opt.set(
-
-            dataroot="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/facades/",
-            dataroot_sem="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/semantics/",
-            dataroot_feats="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vit_feats_4/",
-            dataroot_depth="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/depth/",
-            dataroot_h="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/horizontal_maps/",
-            dataroot_v="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/vertical_maps/",
-            train_split_dir="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/train_split.txt",
-            eval_split_dir ="/media/yiangos/Urban_Enviroment_Understanding_Project/LSAA/facade_data_full/interactive_textures_sem/eval_split.txt",
-
-            #dataroot="/lustreFS/data/vcg/yiangos/interactive_textures_sem/facades/",
-            #dataroot_feats="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vit_feats_4/",
-            #dataroot_depth="/lustreFS/data/vcg/yiangos/interactive_textures_sem/depth/",
-            #dataroot_h="/lustreFS/data/vcg/yiangos/interactive_textures_sem/horizontal_maps/",
-            #dataroot_v="/lustreFS/data/vcg/yiangos/interactive_textures_sem/vertical_maps/",
-            #train_split_dir="/lustreFS/data/vcg/yiangos/interactive_textures_sem/train_split.txt",
-            #eval_split_dir="/lustreFS/data/vcg/yiangos/interactive_textures_sem/eval_split.txt",
+            dataroot=root+"/facades/",
+            dataroot_sem=root+"semantics/",
+            dataroot_feats=root+"/vit_feats_4/",
+            dataroot_depth=root+"/depth/",
+            dataroot_h=root+"/horizontal_maps/",
+            dataroot_v=root+"/vertical_maps/",
+            train_split_dir=root+"/train_split.txt",
+            eval_split_dir =root+"/eval_split.txt",
 
             dataset_mode="imagefolder_va_depth_lr",
             num_gpus=1, batch_size=2,
